@@ -45,7 +45,7 @@ namespace Codecool.HackerNewsClient
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Api}/{action=Index}/{id?}");
             });
         }
     }

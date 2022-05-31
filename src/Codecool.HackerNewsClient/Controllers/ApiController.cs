@@ -11,9 +11,16 @@ namespace Codecool.HackerNewsClient.Controllers
 {
     public class ApiController : Controller
     {
-        public async Task<IActionResult> Top()
+        [Route("/")]
+        [Route("api/{site}/{page?}")]
+        public async Task<IActionResult> Index(string site, string page = "1")
         {
-            string apiUrl = "https://api.hnpwa.com/v0/news/1.json";
+            if (site == "top" || site == null)
+            {
+                site = "news";
+            }
+            string apiUrl = $"https://api.hnpwa.com/v0/{site}/{page}.json";
+
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri(apiUrl);
@@ -26,29 +33,29 @@ namespace Codecool.HackerNewsClient.Controllers
                 {
                     var data = await response.Content.ReadAsStringAsync();
                     var table = Newtonsoft.Json.JsonConvert.DeserializeObject<System.Data.DataTable>(data);
-                    var list = new List<News>();
 
+                    var list = new List<News>();
                     for (var i = 0; i < table.Rows.Count; i++)
                     {
                         News news = new News
                         {
-                            Title = table.Rows[i]["title"].ToString()
+                            Title = table.Rows[i]["title"].ToString(),
+                            Author = table.Rows[i]["user"].ToString(),
+                            TimeAgo = table.Rows[i]["time_ago"].ToString(),
+                            
                         };
                         list.Add(news);
                     }
 
-                    var newView = new NewsView
+                    var newsView = new NewsView
                     {
                         NewsList = list
-                    }
-                    ;
-                    return Content("Hello");
+                    };
 
+                    return View(newsView);
                 }
-                else
-                {
-                    return new StatusCodeResult(500);
-                }
+
+                return new StatusCodeResult(500);
             }
         }
     }

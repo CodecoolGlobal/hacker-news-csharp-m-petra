@@ -1,0 +1,26 @@
+﻿
+
+
+<div class="jumbotron">
+    Welcome
+</div>
+<div class="row">
+    <div class="col-md-4">
+    </div>
+    <div class="col-md-4">
+    </div>
+    <div class="col-md-4">
+    </div>
+</div>
+
+@model Codecool.HackerNewsClient.Models.NewsView
+
+<ul>
+    @foreach (var row in Model.NewsList)
+    {
+        <li>@row.Author</li>
+        <li>@row.Title</li>
+        <li>@row.TimeAgo</li>
+
+    }
+</ul>
